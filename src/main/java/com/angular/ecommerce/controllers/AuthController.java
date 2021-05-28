@@ -2,12 +2,17 @@ package com.angular.ecommerce.controllers;
 
 import com.angular.ecommerce.dto.JwtRequest;
 import com.angular.ecommerce.dto.JwtResponse;
+import com.angular.ecommerce.dto.RegisterDTO;
 import com.angular.ecommerce.dto.UserDTO;
+import com.angular.ecommerce.entities.User;
+import com.angular.ecommerce.repositories.IRoleRepository;
 import com.angular.ecommerce.repositories.IUserRepository;
 import com.angular.ecommerce.security.MyUserPrincipal;
+import com.angular.ecommerce.services.IUserService;
 import com.angular.ecommerce.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,12 +20,10 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.modelmapper.ModelMapper;
 
@@ -39,7 +42,7 @@ public class AuthController {
     @Qualifier("jwtUserDetailsService")
     private UserDetailsService userDetailsService;
     @Autowired
-    private IUserRepository iUserRepository;
+    private IUserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
@@ -51,6 +54,15 @@ public class AuthController {
         final MyUserPrincipal userDetails = (MyUserPrincipal) userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token,modelMapper.map(userDetails.getUser(), UserDTO.class)));
+    }
+    @PostMapping(value = "/signUp",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> signUp(@RequestBody RegisterDTO user) throws Exception {
+        user.getRoleRole().add("CLIENT");
+            User client1=userService.addUser(user);
+            UserDetails userDetails=new MyUserPrincipal(client1);
+            final String token = jwtTokenUtil.generateToken(userDetails);
+        authenticate(client1.getUsername(), client1.getPassword());
+            return ResponseEntity.ok(new JwtResponse(token,modelMapper.map(client1, UserDTO.class)));
     }
 
 
