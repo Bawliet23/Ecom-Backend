@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -47,20 +49,24 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-// We don't need CSRF for this example
-        httpSecurity.csrf().disable().authorizeRequests().and()
-// dont authenticate this particular request
-                .authorizeRequests().antMatchers("/images/**","/signIn","/Auth/**","/signUpA").permitAll().
-// all other requests need to be authenticated
-//              anyRequest().authenticated().
-                and().cors().and().
-// make sure we use stateless session; session won't be used to
-// store user's state.
-        sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-// Add a filter to validate the tokens with every request
-// httpSecurity.addFilterBefore(jwtRequestFilter,
-// UsernamePasswordAuthenticationFilter.class);
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors();
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http.cors().disable().antMatcher("/api/auth/**");
+        http.authorizeRequests().antMatchers("/api/**").permitAll();
+//        http.authorizeRequests().antMatchers("/api/product/**").hasAnyAuthority("ADMIN","CLIENT");
+//        http.authorizeRequests().antMatchers("/api/admin/**").hasAuthority("ADMIN");
+//        http.authorizeRequests().antMatchers("/api/client/**").hasAuthority("CLIENT");
+//        http.authorizeRequests().anyRequest().authenticated();
+//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web
+//                .ignoring()
+//                .antMatchers("/api/auth/**");
+//    }
 }
 

@@ -45,5 +45,5 @@ public class User {
             orphanRemoval = true
     )
     @OrderBy("createdAt DESC")
-    private List<Order> comments = new ArrayList<>();
+    private List<Order> order = new ArrayList<>();
 }

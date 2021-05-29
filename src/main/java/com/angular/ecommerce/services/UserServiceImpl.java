@@ -30,10 +30,12 @@ public class UserServiceImpl implements IUserService{
         User user = modelMapper.map(registerDTO,User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().clear();
-        for (String role : registerDTO.getRoleRole()){
+        for (String role : registerDTO.getRole()){
             Role role1 = roleRepository.findByRole(role);
             user.getRoles().add(role1);
         }
-        return userRepository.save(user);
+        User u =  userRepository.save(user);
+        System.out.println(u.getRoles().size());
+        return u;
     }
 }
