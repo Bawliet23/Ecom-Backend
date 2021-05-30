@@ -122,4 +122,14 @@ public class UserServiceImpl implements IUserService{
         }
         return true;
     }
+
+    @Override
+    public CartDTO getCart(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        CartDTO cartDTO = null;
+        if (user.isPresent()){
+            cartDTO = modelMapper.map(user.get().getCart(),CartDTO.class);
+        }
+        return cartDTO;
+    }
 }

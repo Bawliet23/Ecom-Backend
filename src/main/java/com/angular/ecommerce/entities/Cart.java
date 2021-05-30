@@ -15,7 +15,7 @@ public class Cart {
     @Column(name = "cart_id")
     private Long id;
     @Transient
-    private double totalprice;
+    private double totalPrice;
     @OneToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
@@ -27,4 +27,12 @@ public class Cart {
     )
     @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<CartItem>();
+
+    public double getTotalPrice() {
+        this.totalPrice=0;
+        for (CartItem item : this.getCartItems()){
+            totalPrice+=item.getProduct().getPrice()*item.getQuantity();
+        }
+        return totalPrice;
+    }
 }

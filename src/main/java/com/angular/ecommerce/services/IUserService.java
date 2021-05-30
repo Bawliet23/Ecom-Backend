@@ -11,4 +11,5 @@ public interface IUserService {
     Boolean emptyCart(Long cartId);
     Boolean deleteCartItem(Long cartId,Long cartItemId);
     Boolean updateCartItemQuantity(Long cartItemId,int quantity);
+    CartDTO getCart(Long Id);
 }

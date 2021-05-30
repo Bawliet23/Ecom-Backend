@@ -2,8 +2,7 @@ package com.angular.ecommerce.dto;
 
 import lombok.Data;
 
-import javax.persistence.ElementCollection;
-import javax.validation.constraints.Positive;
+
 import java.util.ArrayList;
 import java.util.List;
 
