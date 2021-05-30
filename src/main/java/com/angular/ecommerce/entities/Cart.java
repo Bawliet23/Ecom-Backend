@@ -26,5 +26,5 @@ public class Cart {
             orphanRemoval = true
     )
     @JsonIgnore
-    private List<CartItem> books = new ArrayList<CartItem>();
+    private List<CartItem> cartItems = new ArrayList<CartItem>();
 }
