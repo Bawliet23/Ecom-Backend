@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static java.nio.file.Files.copy;
@@ -21,14 +23,18 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class FileHandler {
     private static String IMAGEDIRECTORY = "src/main/webapp/image/";
 
-    public  static String  uploadFile(MultipartFile file) throws IOException {
-        Path fileStorage=null;
+    public  static List<String>  uploadFile(List<MultipartFile> files) throws IOException {
+        List<String> filenames = new ArrayList<>();
+
+        for(MultipartFile file : files) {
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
             String ext = FilenameUtils.getExtension(filename);
-            filename = getSaltString()+"."+ext;
-            fileStorage = get(IMAGEDIRECTORY, filename).toAbsolutePath().normalize();
+            filename = getSaltString() + "." + ext;
+            Path fileStorage = get(IMAGEDIRECTORY, filename).toAbsolutePath().normalize();
             copy(file.getInputStream(), fileStorage, REPLACE_EXISTING);
-        return filename;
+            filenames.add(filename);
+        }
+        return filenames;
     }
 public static Resource downloadFile(String filename)  throws IOException {
     Path filePath = get(IMAGEDIRECTORY).toAbsolutePath().normalize().resolve(filename);
