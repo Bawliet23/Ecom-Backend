@@ -28,6 +28,7 @@ import org.modelmapper.ModelMapper;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("*")
 public class AuthController {
 
     @Autowired
