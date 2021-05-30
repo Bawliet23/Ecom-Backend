@@ -42,6 +42,9 @@ public class UserServiceImpl implements IUserService{
     public User addUser(RegisterDTO registerDTO) {
 
         User user = modelMapper.map(registerDTO,User.class);
+        Cart cart = new Cart();
+        Cart cart1 = cartRepository.save(cart);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().clear();
         for (String role : registerDTO.getRole()){
@@ -49,7 +52,8 @@ public class UserServiceImpl implements IUserService{
             user.getRoles().add(role1);
         }
         User u =  userRepository.save(user);
-        System.out.println(u.getRoles().size());
+        cart1.setUser(user);
+        user.setCart(cart1);
         return u;
     }
 
