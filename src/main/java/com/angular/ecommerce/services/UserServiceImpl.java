@@ -112,9 +112,10 @@ public class UserServiceImpl implements IUserService{
         Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
         if(cartItem.isPresent()){
             if (cartItem.get().getProduct().getStock()>=quantity && quantity>0){
+                cartItem.get().setQuantity(quantity);
                 cartItemRepository.save(cartItem.get());
 
-            }if (quantity==0){
+            }else if (quantity==0){
                 cartItemRepository.delete(cartItem.get());
             }
         }

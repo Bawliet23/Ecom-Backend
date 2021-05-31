@@ -47,6 +47,6 @@ public class ClientController {
         Boolean modified = userService.updateCartItemQuantity(cartItemId,quantity);
         if(!modified)
             return ResponseEntity.badRequest().body("Quantity Not Modified");
-        return ResponseEntity.ok("Quantity Not Modified");
+        return ResponseEntity.ok("Quantity  Modified");
     }
 }
