@@ -64,7 +64,7 @@ public class ProductServiceImpl implements IProductService {
         Optional<Product> product = productRepository.findById(productId);
         ProductDTO productDTO = null;
         if (product.isPresent())
-            productDTO = modelMapper.map(product,ProductDTO.class);
+            productDTO = modelMapper.map(product.get(),ProductDTO.class);
         return productDTO;
     }
 }
