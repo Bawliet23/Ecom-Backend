@@ -58,24 +58,24 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public Boolean addToCart(Long cartId, CartItemDTO cartItemDTO) {
-        Optional<Cart> cart=cartRepository.findById(cartId);
+    public Boolean addToCart(Long id, CartItemDTO cartItemDTO) {
+        Optional<User> user = userRepository.findById(id);
         AtomicReference<Boolean> added = new AtomicReference<>(false);
         CartItem cartItem = modelMapper.map(cartItemDTO,CartItem.class);
-        if (cart.isPresent()) {
-            if (cart.get().getCartItems().stream().anyMatch(cartItem1 -> cartItem1.getProduct().getId().equals(cartItem.getProduct().getId()))) {
-               cart.get().getCartItems().stream().forEach(cartItem1 -> {
+        if (user.isPresent()) {
+            if (user.get().getCart().getCartItems().stream().anyMatch(cartItem1 -> cartItem1.getProduct().getId().equals(cartItem.getProduct().getId()))) {
+                user.get().getCart().getCartItems().stream().forEach(cartItem1 -> {
                    if (cartItem1.getProduct().getId().equals(cartItem.getProduct().getId())){
                        if (cartItem1.getProduct().getStock()>=(cartItem1.getQuantity()+cartItem.getQuantity())){
                            cartItem1.setQuantity(cartItem1.getQuantity()+cartItem.getQuantity());
-                           cartRepository.save(cart.get());
+                           cartRepository.save(user.get().getCart());
                            added.set(true);
                        }
                    }
                  });
          }else{
                 if (cartItem.getQuantity()<=cartItem.getProduct().getStock()){
-                    cart.get().getCartItems().add(cartItem);
+                    user.get().getCart().getCartItems().add(cartItem);
                     added.set(true);
                 }
             }
@@ -91,7 +91,7 @@ public class UserServiceImpl implements IUserService{
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()){
            user.get().getCart().getCartItems().clear();
-           userRepository.save(user.get());
+           cartRepository.save(user.get().getCart());
            return true;
         }
 
@@ -99,11 +99,11 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public Boolean deleteCartItem(Long cartId, Long cartItemId) {
-        Optional<Cart> cart=cartRepository.findById(cartId);
-        if (cart.isPresent()){
-            cart.get().getCartItems().removeIf(cartItem -> cartItem.getId().equals(cartItemId));
-            cartRepository.save(cart.get());
+    public Boolean deleteCartItem(Long cartItemId) {
+
+        Optional<CartItem> cartItem=cartItemRepository.findById(cartItemId);
+        if (cartItem.isPresent()){
+            cartItemRepository.delete(cartItem.get());
             return true;
         }
         return false;

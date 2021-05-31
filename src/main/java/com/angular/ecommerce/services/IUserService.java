@@ -9,7 +9,7 @@ public interface IUserService {
     User addUser(RegisterDTO user);
     Boolean addToCart(Long cartId ,CartItemDTO cartItemDTO);
     Boolean emptyCart(Long cartId);
-    Boolean deleteCartItem(Long cartId,Long cartItemId);
+    Boolean deleteCartItem(Long cartItemId);
     Boolean updateCartItemQuantity(Long cartItemId,int quantity);
     CartDTO getCart(Long Id);
 }
