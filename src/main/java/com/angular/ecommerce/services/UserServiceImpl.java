@@ -3,14 +3,8 @@ package com.angular.ecommerce.services;
 import com.angular.ecommerce.dto.CartDTO;
 import com.angular.ecommerce.dto.CartItemDTO;
 import com.angular.ecommerce.dto.RegisterDTO;
-import com.angular.ecommerce.entities.Cart;
-import com.angular.ecommerce.entities.CartItem;
-import com.angular.ecommerce.entities.Role;
-import com.angular.ecommerce.entities.User;
-import com.angular.ecommerce.repositories.ICartItemRepository;
-import com.angular.ecommerce.repositories.ICartRepository;
-import com.angular.ecommerce.repositories.IRoleRepository;
-import com.angular.ecommerce.repositories.IUserRepository;
+import com.angular.ecommerce.entities.*;
+import com.angular.ecommerce.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +28,8 @@ public class UserServiceImpl implements IUserService{
 
     @Autowired
     private IRoleRepository roleRepository;
+    @Autowired
+    private IProductRepository productRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -62,11 +58,12 @@ public class UserServiceImpl implements IUserService{
         Optional<User> user = userRepository.findById(id);
         AtomicReference<Boolean> added = new AtomicReference<>(false);
         CartItem cartItem = modelMapper.map(cartItemDTO,CartItem.class);
-        if (user.isPresent()) {
+        Optional<Product> product = productRepository.findById(cartItem.getProduct().getId());
+ if (user.isPresent() && product.isPresent()) {
             if (user.get().getCart().getCartItems().stream().anyMatch(cartItem1 -> cartItem1.getProduct().getId().equals(cartItem.getProduct().getId()))) {
                 user.get().getCart().getCartItems().stream().forEach(cartItem1 -> {
                    if (cartItem1.getProduct().getId().equals(cartItem.getProduct().getId())){
-                       if (cartItem1.getProduct().getStock()>=(cartItem1.getQuantity()+cartItem.getQuantity())){
+                       if (product.get().getStock()>=(cartItem1.getQuantity()+cartItem.getQuantity())){
                            cartItem1.setQuantity(cartItem1.getQuantity()+cartItem.getQuantity());
                            cartRepository.save(user.get().getCart());
                            added.set(true);
@@ -74,8 +71,9 @@ public class UserServiceImpl implements IUserService{
                    }
                  });
          }else{
-                if (cartItem.getQuantity()<=cartItem.getProduct().getStock()){
+                if (cartItem.getQuantity()<=product.get().getStock()){
                     user.get().getCart().getCartItems().add(cartItem);
+                    cartItem.setCart(user.get().getCart());
                     added.set(true);
                 }
             }

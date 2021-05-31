@@ -25,7 +25,6 @@ public class Cart {
             fetch = FetchType.LAZY,
             orphanRemoval = true
     )
-    @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<CartItem>();
 
     public double getTotalPrice() {
