@@ -23,18 +23,18 @@ public class ProductController {
     private IProductService productService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<ProductDTO>> getBooks(@PageableDefault(size = 10) Pageable page) {
+    public ResponseEntity<Page<ProductDTO>> getProducts(@PageableDefault(size = 10) Pageable page) {
         return ResponseEntity.ok()
                 .body(productService.getAllProducts(page));
 
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getBookById(@PathVariable("id") Long id){
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable("id") Long id){
         return ResponseEntity.ok()
                 .body(productService.getProductById(id));
     }
     @PostMapping("/add")
-    public ResponseEntity<?> addBook(@RequestParam("images") List<MultipartFile> images,@RequestParam("product") String  productDTO) throws IOException {
+    public ResponseEntity<?> addProduct(@RequestParam("images") List<MultipartFile> images,@RequestParam("product") String  productDTO) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO productDTO1 = objectMapper.readValue(productDTO,ProductDTO.class);
         Boolean added = productService.addProduct(productDTO1,images);
