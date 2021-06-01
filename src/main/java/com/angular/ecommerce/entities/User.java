@@ -26,6 +26,7 @@ public class User {
     @NotEmpty(message = "*Please provide your password")
     private String password;
     @Email
+    @Column(unique = true)
     private String email;
     private String address;
 

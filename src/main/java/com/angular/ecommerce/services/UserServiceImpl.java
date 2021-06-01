@@ -1,5 +1,6 @@
 package com.angular.ecommerce.services;
 
+import com.angular.ecommerce.config.EmailCfg;
 import com.angular.ecommerce.dto.CartDTO;
 import com.angular.ecommerce.dto.CartItemDTO;
 import com.angular.ecommerce.dto.RegisterDTO;
@@ -7,6 +8,9 @@ import com.angular.ecommerce.entities.*;
 import com.angular.ecommerce.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +41,11 @@ public class UserServiceImpl implements IUserService{
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private EmailCfg emailCfg;
+    @Autowired
+    private JavaMailSender javaMailSender;
+
     @Override
     public User addUser(RegisterDTO registerDTO) {
 
@@ -53,6 +62,12 @@ public class UserServiceImpl implements IUserService{
         User u =  userRepository.save(user);
         cart1.setUser(user);
         user.setCart(cart1);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(this.emailCfg.getUsername());
+        mailMessage.setTo(u.getEmail());
+        mailMessage.setSubject("welcome");
+        mailMessage.setText("your UserName is : "+u.getUsername()+" you password is : "+registerDTO.getPassword());
+        javaMailSender.send(mailMessage);
         return u;
     }
 
