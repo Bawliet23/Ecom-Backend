@@ -49,4 +49,12 @@ public class ClientController {
             return ResponseEntity.badRequest().body("Quantity Not Modified");
         return ResponseEntity.ok("Quantity  Modified");
     }
+    @PostMapping("/{id}/makeOrder")
+    public ResponseEntity<?> makeOrder(@PathVariable("id") Long id){
+        Boolean added = userService.makeOrder(id);
+        if(!added)
+            return ResponseEntity.badRequest().body("Order Failed");
+
+        return ResponseEntity.ok().body("Order successful");
+    }
 }

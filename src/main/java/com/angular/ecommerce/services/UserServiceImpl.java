@@ -25,7 +25,10 @@ public class UserServiceImpl implements IUserService{
     private ICartItemRepository cartItemRepository;
     @Autowired
     private ICartRepository cartRepository;
-
+    @Autowired
+    private IOrderItemRepository orderItemRepository;
+    @Autowired
+    private IOrderRepository orderRepository;
     @Autowired
     private IRoleRepository roleRepository;
     @Autowired
@@ -130,5 +133,30 @@ public class UserServiceImpl implements IUserService{
             cartDTO = modelMapper.map(user.get().getCart(),CartDTO.class);
         }
         return cartDTO;
+    }
+
+    @Override
+    public Boolean makeOrder(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        Order o = new Order();
+        Boolean orderMade=false;
+        if (user.isPresent()){
+            Order order = orderRepository.save(o);
+            order.setUser(user.get());
+            order.setShippingAddress(user.get().getAddress());
+            user.get().getCart().getCartItems().stream().forEach(cartItem ->{
+                Optional<Product> product = productRepository.findById(cartItem.getProduct().getId());
+                OrderItem orderItem = new OrderItem();
+                orderItem.setQuantity(cartItem.getQuantity());
+                orderItem.setProduct(cartItem.getProduct());
+                product.get().setStock(product.get().getStock()-cartItem.getQuantity());
+                order.getOrderItems().add(orderItem);
+                orderItem.setOrder(order);
+            });
+            orderMade=true;
+            orderRepository.save(order);
+            user.get().getCart().getCartItems().clear();
+        }
+        return orderMade;
     }
 }

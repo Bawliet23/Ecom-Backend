@@ -11,5 +11,6 @@ public class UserDTO {
     private String username;
     private String email;
     private String tel;
+    private String address;
     private List<String> role = new ArrayList<String>();
 }

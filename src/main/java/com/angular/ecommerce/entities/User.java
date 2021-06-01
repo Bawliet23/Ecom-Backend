@@ -27,6 +27,7 @@ public class User {
     private String password;
     @Email
     private String email;
+    private String address;
 
     private String tel;
 

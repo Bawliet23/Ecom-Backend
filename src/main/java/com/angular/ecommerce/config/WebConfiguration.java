@@ -1,4 +1,4 @@
-package com.angular.ecommerce.security;
+package com.angular.ecommerce.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;

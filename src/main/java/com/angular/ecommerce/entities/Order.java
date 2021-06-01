@@ -19,7 +19,8 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
     @Transient
-    private double totalprice;
+    private double totalPrice;
+    private String shippingAddress;
     @ManyToOne(fetch = FetchType.LAZY,cascade ={
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -33,7 +34,7 @@ public class Order {
             orphanRemoval = true
     )
     @JsonIgnore
-    private List<OrderItem> books = new ArrayList<OrderItem>();
+    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
     @Column(name = "created_at")
     @CreationTimestamp
     private Date createdAt;
@@ -41,4 +42,12 @@ public class Order {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Date updatedAt;
+
+    public double getTotalPrice() {
+        this.totalPrice=0;
+        for (OrderItem item : this.getOrderItems()){
+            totalPrice+=item.getProduct().getPrice()*item.getQuantity();
+        }
+        return totalPrice;
+    }
 }
