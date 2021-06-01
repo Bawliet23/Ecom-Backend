@@ -25,8 +25,11 @@ import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static java.nio.file.Paths.get;
 
 
 @Transactional
@@ -222,7 +225,7 @@ public class UserServiceImpl implements IUserService{
 //        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         XSSFFont font = ((XSSFWorkbook) workbook).createFont();
         font.setFontName("Arial");
-        font.setFontHeightInPoints((short) 16);
+        font.setFontHeightInPoints((short) 14);
         font.setBold(true);
         headerStyle.setFont(font);
 
@@ -248,38 +251,39 @@ public class UserServiceImpl implements IUserService{
 
         CellStyle style = workbook.createCellStyle();
         style.setWrapText(true);
-        for (int i=2 ;i<order.getOrderItems().size()+2;i++){
+        for (int i=1 ;i<=order.getOrderItems().size();i++){
 
 
             Row row = sheet.createRow(i);
 
             Cell cell = row.createCell(0);
-            cell.setCellValue(order.getOrderItems().get(i-2).getProduct().getName());
+            cell.setCellValue(order.getOrderItems().get(i-1).getProduct().getName());
             cell.setCellStyle(style);
 
             cell = row.createCell(1);
-            cell.setCellValue(order.getOrderItems().get(i-2).getProduct().getPrice());
+            cell.setCellValue(order.getOrderItems().get(i-1).getProduct().getPrice());
             cell.setCellStyle(style);
 
             cell = row.createCell(2);
-            cell.setCellValue(order.getOrderItems().get(i-2).getQuantity());
+            cell.setCellValue(order.getOrderItems().get(i-1).getQuantity());
             cell.setCellStyle(style);
 
             cell = row.createCell(3);
-            cell.setCellValue(order.getOrderItems().get(i-2).getProduct().getPrice() * order.getOrderItems().get(i-2).getQuantity());
+            cell.setCellValue(order.getOrderItems().get(i-1).getProduct().getPrice() * order.getOrderItems().get(i-1).getQuantity());
             cell.setCellStyle(style);
 
             cell = row.createCell(1);
-            cell.setCellValue(order.getOrderItems().get(i-2).getProduct().getPrice());
+            cell.setCellValue(order.getOrderItems().get(i-1).getProduct().getPrice());
             cell.setCellStyle(style);
 
 
         }
-        Row row1 = sheet.createRow(order.getOrderItems().size()+2);
+        Row row1 = sheet.createRow(order.getOrderItems().size()+1);
         Cell cell = row1.createCell(4);
         cell.setCellValue(order.getTotalPrice());
         cell.setCellStyle(style);
-        File f = new File("src/main/webapp/Excel/"+order.getCreatedAt());
+        File f = new File("src/main/webapp/Excel/"+order.getCreatedAt().getTime()+".xlsx");
+        f.createNewFile();
         FileOutputStream fileOut = new FileOutputStream(f);
         workbook.write(fileOut);
         fileOut.close();
