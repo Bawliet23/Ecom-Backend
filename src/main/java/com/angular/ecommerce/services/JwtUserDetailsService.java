@@ -11,7 +11,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private IUserRepository userRepository;
@@ -20,6 +23,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findUserByUsername(username);
+        System.out.println(user.getRoles().size());
         if (user==null){
             throw new UsernameNotFoundException("User not found with username: " + username);
         }

@@ -8,7 +8,7 @@ public class Env {
 
     public static String getUrlImages() {
         try {
-            return "http://"+InetAddress.getLocalHost().getHostAddress()+":8080/api/images/";
+            return "http://"+InetAddress.getLocalHost().getHostAddress()+":8080/images/";
         } catch (UnknownHostException e) {
             e.printStackTrace();
             return null;
