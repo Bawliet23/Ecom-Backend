@@ -2,6 +2,7 @@ package com.angular.ecommerce.services;
 
 import com.angular.ecommerce.dto.CartDTO;
 import com.angular.ecommerce.dto.CartItemDTO;
+import com.angular.ecommerce.dto.ChangePasswordDTO;
 import com.angular.ecommerce.dto.RegisterDTO;
 import com.angular.ecommerce.entities.User;
 
@@ -13,4 +14,5 @@ public interface IUserService {
     Boolean updateCartItemQuantity(Long cartItemId,int quantity);
     CartDTO getCart(Long Id);
     Boolean makeOrder(Long userId);
+    Boolean changePassword(ChangePasswordDTO changePassword);
 }

@@ -2,6 +2,7 @@ package com.angular.ecommerce.controllers;
 
 import com.angular.ecommerce.dto.CartDTO;
 import com.angular.ecommerce.dto.CartItemDTO;
+import com.angular.ecommerce.dto.ChangePasswordDTO;
 import com.angular.ecommerce.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,13 @@ public class ClientController {
             return ResponseEntity.badRequest().body("Order Failed");
 
         return ResponseEntity.ok().body("Order successful");
+    }
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePassword){
+        Boolean changed = userService.changePassword(changePassword);
+        if(!changed)
+            return ResponseEntity.badRequest().body("Failed To Change Password");
+
+        return ResponseEntity.ok().body("Password Changed");
     }
 }

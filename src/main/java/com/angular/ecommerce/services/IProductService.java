@@ -15,6 +15,8 @@ public interface IProductService {
     int getProductQuantity(Long productId);
     Page<ProductDTO> getAllProducts(Pageable pageable);
     ProductDTO getProductById(Long productId);
+    Page<ProductDTO> searchProductByDescription(Pageable pageable, String description);
+    ProductDTO updateProduct(ProductDTO productDTO);
 
 
 }

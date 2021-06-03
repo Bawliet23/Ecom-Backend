@@ -42,4 +42,16 @@ public class ProductController {
         return ResponseEntity.ok().body("product added");
         return ResponseEntity.badRequest().body("product Not added");
     }
+    @GetMapping("/search/{searchKey}")
+    public ResponseEntity<?> searchByDescription(Pageable pageable, @PathVariable String searchKey){
+        return ResponseEntity.ok().body(productService.searchProductByDescription(pageable, searchKey));
+    }
+    @PutMapping("/updateProduct")
+    public ResponseEntity<?> updateProduct(@RequestBody ProductDTO productDTO){
+        ProductDTO productDTO1 = productService.updateProduct(productDTO);
+        if (productDTO1==null)
+            return ResponseEntity.badRequest().body("Update Failed");
+        return  ResponseEntity.ok().body(productDTO1);
+
+    }
 }

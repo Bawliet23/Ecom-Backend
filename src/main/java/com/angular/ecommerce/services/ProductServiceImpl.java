@@ -67,4 +67,28 @@ public class ProductServiceImpl implements IProductService {
             productDTO = modelMapper.map(product.get(),ProductDTO.class);
         return productDTO;
     }
+
+
+    @Override
+    public Page<ProductDTO> searchProductByDescription(Pageable pageable, String description) {
+        Page<Product> products = productRepository.findProductsByDescriptionContains(pageable,description);
+        return products.map(product -> modelMapper.map(product,ProductDTO.class));
+
+    }
+
+    @Override
+    public ProductDTO updateProduct(ProductDTO productDTO) {
+        Optional<Product> product = productRepository.findById(productDTO.getId());
+        if (product.isPresent()){
+            product.get().setDescription(productDTO.getDescription());
+            product.get().setStock(productDTO.getStock());
+            product.get().setName(productDTO.getName());
+            product.get().setPrice(productDTO.getPrice());
+            product.get().setDesignation(productDTO.getDesignation());
+            productRepository.save(product.get());
+            return modelMapper.map(product.get(),ProductDTO.class);
+        }
+        return null;
+
+    }
 }

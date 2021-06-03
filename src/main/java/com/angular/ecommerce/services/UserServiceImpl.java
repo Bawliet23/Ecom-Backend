@@ -3,6 +3,7 @@ package com.angular.ecommerce.services;
 import com.angular.ecommerce.config.EmailCfg;
 import com.angular.ecommerce.dto.CartDTO;
 import com.angular.ecommerce.dto.CartItemDTO;
+import com.angular.ecommerce.dto.ChangePasswordDTO;
 import com.angular.ecommerce.dto.RegisterDTO;
 import com.angular.ecommerce.entities.*;
 import com.angular.ecommerce.repositories.*;
@@ -208,6 +209,21 @@ public class UserServiceImpl implements IUserService{
             user.get().getCart().getCartItems().clear();
         }
         return orderMade;
+    }
+
+    @Override
+    public Boolean changePassword(ChangePasswordDTO changePassword) {
+        Optional<User> user = userRepository.findById(changePassword.getId());
+        Boolean changed = false;
+        if (user.isPresent()) {
+
+            if ( passwordEncoder.matches(user.get().getPassword(),changePassword.getOldPassword())){
+                user.get().setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+                userRepository.save(user.get());
+                changed=true;
+            }
+        }
+        return changed;
     }
 
 
