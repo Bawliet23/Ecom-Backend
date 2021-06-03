@@ -217,7 +217,7 @@ public class UserServiceImpl implements IUserService{
         Boolean changed = false;
         if (user.isPresent()) {
 
-            if ( passwordEncoder.matches(user.get().getPassword(),changePassword.getOldPassword())){
+            if ( passwordEncoder.matches(changePassword.getOldPassword(),user.get().getPassword())){
                 user.get().setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
                 userRepository.save(user.get());
                 changed=true;
