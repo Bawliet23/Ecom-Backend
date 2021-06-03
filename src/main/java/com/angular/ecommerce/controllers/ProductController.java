@@ -43,8 +43,8 @@ public class ProductController {
         return ResponseEntity.badRequest().body("product Not added");
     }
     @GetMapping("/search/{searchKey}")
-    public ResponseEntity<?> searchByDescription(Pageable pageable, @PathVariable String searchKey){
-        return ResponseEntity.ok().body(productService.searchProductByDescription(pageable, searchKey));
+    public ResponseEntity<?> searchByDescription(Pageable pageable, @PathVariable("searchKey") String searchKey){
+        return ResponseEntity.ok().body(productService.searchProduct(pageable, searchKey));
     }
     @PutMapping("/updateProduct")
     public ResponseEntity<?> updateProduct(@RequestBody ProductDTO productDTO){

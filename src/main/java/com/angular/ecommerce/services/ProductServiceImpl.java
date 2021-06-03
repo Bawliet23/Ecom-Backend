@@ -70,8 +70,8 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    public Page<ProductDTO> searchProductByDescription(Pageable pageable, String description) {
-        Page<Product> products = productRepository.findProductsByDescriptionContains(pageable,description);
+    public Page<ProductDTO> searchProduct(Pageable pageable, String description) {
+        Page<Product> products = productRepository.findProductsByNameContainingOrDesignationContaining(pageable,description,description);
         return products.map(product -> modelMapper.map(product,ProductDTO.class));
 
     }
