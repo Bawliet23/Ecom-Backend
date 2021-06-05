@@ -17,6 +17,7 @@ public interface IProductService {
     ProductDTO getProductById(Long productId);
     Page<ProductDTO> searchProduct(Pageable pageable, String serchKey);
     ProductDTO updateProduct(ProductDTO productDTO);
+    Boolean deleteProduct(Long productId);
 
 
 }

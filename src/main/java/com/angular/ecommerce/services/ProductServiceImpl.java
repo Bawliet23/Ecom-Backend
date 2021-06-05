@@ -91,4 +91,16 @@ public class ProductServiceImpl implements IProductService {
         return null;
 
     }
+
+    @Override
+    public Boolean deleteProduct(Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        Boolean deleted = false;
+        if (product.isPresent()){
+            productRepository.delete(product.get());
+            deleted=true;
+        }
+
+        return deleted;
+    }
 }
