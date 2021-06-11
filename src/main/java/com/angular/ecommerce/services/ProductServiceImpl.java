@@ -2,6 +2,7 @@ package com.angular.ecommerce.services;
 
 import com.angular.ecommerce.dto.ProductDTO;
 import com.angular.ecommerce.entities.Product;
+import com.angular.ecommerce.repositories.ICartItemRepository;
 import com.angular.ecommerce.repositories.IProductRepository;
 import com.angular.ecommerce.utils.FileHandler;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,8 @@ public class ProductServiceImpl implements IProductService {
     private IProductRepository productRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private ICartItemRepository cartItemRepository;
 
     @Override
     public Boolean addProduct(ProductDTO productDTO, List<MultipartFile> images) throws IOException {
@@ -95,12 +98,15 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Boolean deleteProduct(Long productId) {
         Optional<Product> product = productRepository.findById(productId);
+
         Boolean deleted = false;
         if (product.isPresent()){
-            productRepository.delete(product.get());
-            deleted=true;
+            Boolean exists = cartItemRepository.existsCartItemsByProductId(product.get().getId());
+            if(!exists){
+                productRepository.delete(product.get());
+                deleted=true;
+            }
         }
-
         return deleted;
     }
 }
