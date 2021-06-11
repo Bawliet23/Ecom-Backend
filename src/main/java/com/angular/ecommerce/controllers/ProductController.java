@@ -44,7 +44,7 @@ public class ProductController {
         return ResponseEntity.badRequest().body("product Not added");
     }
     @GetMapping("/search/{searchKey}")
-    public ResponseEntity<?> searchByDescription(Pageable pageable, @PathVariable(name="searchKey",required = false,value = " ") String searchKey){
+    public ResponseEntity<?> searchByDescription(Pageable pageable, @PathVariable(name="searchKey") String searchKey){
 
         System.out.println(searchKey);
         if (searchKey.isEmpty()) {
