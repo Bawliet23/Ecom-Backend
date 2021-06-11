@@ -51,8 +51,9 @@ public class ClientController {
         return ResponseEntity.ok("Quantity  Modified");
     }
     @PostMapping("/makeOrder")
-    public ResponseEntity<?> makeOrder(@RequestParam("id") Long id){
-        Boolean added = userService.makeOrder(id);
+    public ResponseEntity<?> makeOrder(@RequestParam("id") String id){
+        Long id1 = Long.valueOf(id);
+        Boolean added = userService.makeOrder(id1);
         if(!added)
             return ResponseEntity.badRequest().body("Order Failed");
 
